@@ -51,10 +51,10 @@ class OrderCreateAPIView(generics.GenericAPIView):
         return Response({'success': True, 'base_price': pizza.base_price, 'total': total})
 
     def get_order_metadata(self, extra_ingredients):
-        extra_ingredients_ids = list(extra_ingredients.values_list('id', flat=True))
-        metadata = {
-            "extra_ingredients": extra_ingredients_ids
-        }
+        metadata = {}
+        if extra_ingredients:
+            extra_ingredients_ids = list(extra_ingredients.values_list('id', flat=True))
+            metadata["extra_ingredients"] = extra_ingredients_ids
         return metadata
 
     def get_required_field(self, field_name):
