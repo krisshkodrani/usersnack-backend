@@ -10,6 +10,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         Ingredient.objects.all().delete()
-        Pizza.objects.all().delete()
+        for pizza in Pizza.objects.all():
+            pizza.image.delete(save=False)  # delete file
+            pizza.delete()
         Order.objects.all().delete()
         print('Deleted')
