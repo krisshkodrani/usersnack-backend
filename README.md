@@ -1,4 +1,4 @@
-# UserSnack Django REST Backend
+# Usersnack Django REST Backend
 
 ## Setup
 
