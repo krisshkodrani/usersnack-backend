@@ -63,6 +63,9 @@ class PizzaAPITestCase(APITestCase):
         response = self.client.get(url)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual('Cheese & Tomato', response.data['name'])
+        self.assertEqual(11.9, response.data['base_price'])
+        self.assertEqual(2, len(response.data['ingredients']))
+        self.assertIsNotNone(response.data['image'])
 
 
 class IngredientAPIViewTestCase(APITestCase):
@@ -82,3 +85,6 @@ class IngredientAPIViewTestCase(APITestCase):
         response = self.client.get(url, {'is_extra': True})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(6, len(response.data))
+
+        for ingredient in response.data:
+            self.assertTrue(ingredient['price'] > 0)

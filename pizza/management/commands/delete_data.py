@@ -3,10 +3,7 @@ from pizza.models import Ingredient, Pizza, Order
 
 
 class Command(BaseCommand):
-    help = 'Easy delete seed data'
-
-    def add_arguments(self, parser):
-        pass
+    help = 'Easy delete data'
 
     def handle(self, *args, **options):
         Ingredient.objects.all().delete()
