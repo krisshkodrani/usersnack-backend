@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: UserSnack Django REST Backend
+  version: 1.0.0
+  description: Backend to serve pizzas and takes pizza orders for Usersnack
+paths:
+  /pizza/:
+    get:
+      operationId: pizza_list
+      tags:
+      - pizza
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizza'
+          description: ''
+  /pizza/{id}/:
+    get:
+      operationId: pizza_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - pizza
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizza'
+          description: ''
+  /pizza/create-order/:
+    post:
+      operationId: pizza_create_order_create
+      tags:
+      - pizza
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Order'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /pizza/ingredients/:
+    get:
+      operationId: pizza_ingredients_list
+      parameters:
+      - in: query
+        name: is_extra
+        schema:
+          type: boolean
+      tags:
+      - pizza
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+          description: ''
+components:
+  schemas:
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        price:
+          type: number
+          format: double
+      required:
+      - id
+      - name
+    Order:
+      type: object
+      properties:
+        customer_name:
+          type: string
+          maxLength: 200
+        customer_address:
+          type: string
+        pizza_id:
+          type: string
+        extra_ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+          nullable: true
+      required:
+      - customer_address
+      - customer_name
+      - extra_ingredients
+      - pizza_id
+    Pizza:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        base_price:
+          type: number
+          format: double
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+          nullable: true
+        image:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - base_price
+      - id
+      - ingredients
+      - name
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
